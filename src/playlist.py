@@ -1,3 +1,4 @@
+import googleapiclient.discovery
 import isodate
 from googleapiclient.discovery import build
 import os
@@ -28,7 +29,7 @@ class PlayList:
         return f"{self.__title} ({self.__url})"
 
     @classmethod
-    def get_service(cls):
+    def get_service(cls) -> googleapiclient.discovery.Resource:
         """  возвращает объект для работы с YouTube API """
         api_key: str = os.getenv('YT_API_KEY')
         return build('youtube', 'v3', developerKey=api_key)
@@ -60,7 +61,7 @@ class PlayList:
         return video_ids
 
     @property
-    def video_response(self):
+    def video_response(self) -> googleapiclient.discovery.Resource:
         """ Метод для получения ответа для всех видео в списке по videoId """
         video_response = self.get_service().videos().list(part='contentDetails,statistics',
                                                           id=','.join(self.playlist_videos_list)
@@ -68,7 +69,7 @@ class PlayList:
         return video_response
 
     @property
-    def total_duration(self):
+    def total_duration(self) -> datetime.timedelta:
         """ Метод возвращающий общую продолжительность видео в плейлисте """
         durations = datetime.timedelta()
 
